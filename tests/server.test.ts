@@ -9,12 +9,12 @@ const createApp = () => {
   const app = express()
   app.use('/github', githubRouter)
 
-  // Route for / - returns URL lists specified in LISTS env var
+  // Route for / - returns URL lists specified in HOSTS env var
   app.get('/', async (_req, res) => {
     try {
-      const lists = process.env.LISTS
+      const lists = process.env.HOSTS
       if (!lists) {
-        return res.status(400).send('LISTS environment variable not set')
+        return res.status(400).send('HOSTS environment variable not set')
       }
       const paths = lists
         .split(',')
@@ -54,16 +54,16 @@ describe('Server Routes', () => {
   })
 
   describe('GET /', () => {
-    it('should return 400 when LISTS is not set', async () => {
-      delete process.env.LISTS
+    it('should return 400 when HOSTS is not set', async () => {
+      delete process.env.HOSTS
 
       const response = await request(app).get('/').expect(400)
 
-      expect(response.text).toBe('LISTS environment variable not set')
+      expect(response.text).toBe('HOSTS environment variable not set')
     })
 
     it('should fetch and combine data from specified paths', async () => {
-      process.env.LISTS = '/github/hooks,/github/web'
+      process.env.HOSTS = '/github/hooks,/github/web'
 
       // Mock the fetch calls for /github/hooks and /github/web
       const _mockData = {
@@ -96,8 +96,8 @@ describe('Server Routes', () => {
       )
     })
 
-    it('should handle optional leading/trailing slashes in LISTS', async () => {
-      process.env.LISTS = ' /github/hooks/, /github/web/ '
+    it('should handle optional leading/trailing slashes in HOSTS', async () => {
+      process.env.HOSTS = ' /github/hooks/, /github/web/ '
 
       ;(global.fetch as jest.Mock)
         .mockResolvedValueOnce({
@@ -120,7 +120,7 @@ describe('Server Routes', () => {
     })
 
     it('should handle fetch errors gracefully', async () => {
-      process.env.LISTS = '/github/hooks,/github/invalid'
+      process.env.HOSTS = '/github/hooks,/github/invalid'
 
       ;(global.fetch as jest.Mock)
         .mockResolvedValueOnce({
@@ -135,7 +135,7 @@ describe('Server Routes', () => {
     })
 
     it('should handle non-ok responses gracefully', async () => {
-      process.env.LISTS = '/github/hooks,/github/invalid'
+      process.env.HOSTS = '/github/hooks,/github/invalid'
 
       ;(global.fetch as jest.Mock)
         .mockResolvedValueOnce({

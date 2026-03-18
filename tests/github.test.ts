@@ -18,8 +18,8 @@ describe('GitHub Routes', () => {
         global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>
       })
 
-      describe('GET /github/:subpath', () => {
-        it('should return array values for valid subpath', async () => {
+      describe('GET /github/:service', () => {
+        it('should return array values for valid service', async () => {
           const mockData = {
             hooks: ['192.30.252.0/22', '185.199.108.0/22'],
             web: ['140.82.112.0/20'],
@@ -37,7 +37,7 @@ describe('GitHub Routes', () => {
           expect(global.fetch).toHaveBeenCalledWith('https://api.github.com/meta')
         })
 
-        it('should return 400 for invalid subpath', async () => {
+        it('should return 400 for invalid service', async () => {
           const mockData = {
             hooks: ['192.30.252.0/22'],
           }
@@ -49,7 +49,7 @@ describe('GitHub Routes', () => {
 
           const response = await request(app).get('/github/invalid').expect(400)
 
-          expect(response.text).toBe('Invalid subpath or not an array')
+          expect(response.text).toBe('Invalid service or not an array')
         })
 
         it('should handle API errors', async () => {
@@ -64,7 +64,7 @@ describe('GitHub Routes', () => {
         })
       })
 
-      describe('GET /github (subpathless)', () => {
+      describe('GET /github (serviceless)', () => {
         it('should return only valid IPv4 and IPv6 subnets', async () => {
           const mockData = {
             verifiable_password_authentication: true,

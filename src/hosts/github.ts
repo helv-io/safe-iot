@@ -38,20 +38,20 @@ router.get('/', async (_req, res) => {
   }
 })
 
-router.get('/:subpath', async (req, res) => {
-  const subpath = req.params.subpath
+router.get('/:service', async (req, res) => {
+  const service = req.params.service
   try {
     const response = await fetch('https://api.github.com/meta')
     if (!response.ok) {
       throw new Error(`GitHub API responded with status ${response.status}`)
     }
     const data = await response.json()
-    const array = data[subpath]
+    const array = data[service]
     if (Array.isArray(array)) {
       const result = array.join('\n')
       res.type('text/plain').send(result)
     } else {
-      res.status(400).send('Invalid subpath or not an array')
+      res.status(400).send('Invalid service or not an array')
     }
   } catch (error) {
     console.error('Error:', error)

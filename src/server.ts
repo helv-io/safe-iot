@@ -9,12 +9,12 @@ const port = process.env.PORT || 3000
 app.use('/github', githubRouter)
 app.use('/aws', awsRouter)
 
-// Route for / - returns URL lists specified in LISTS env var
+// Route for / - returns URL lists specified in HOSTS env var
 app.get('/', async (_req, res) => {
   try {
-    const lists = process.env.LISTS
+    const lists = process.env.HOSTS
     if (!lists) {
-      return res.status(400).send('LISTS environment variable not set')
+      return res.status(400).send('HOSTS environment variable not set')
     }
     const paths = lists
       .split(',')

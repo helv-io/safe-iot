@@ -48,7 +48,7 @@ docker run -p 3000:3000 --env-file .env safe-iot
 
 Or with environment variables:
 ```bash
-docker run -p 3000:3000 -e LISTS="/github/api,/github/web" safe-iot
+docker run -p 3000:3000 -e HOSTS="/github/api,/github/web" safe-iot
 ```
 
 ### Graceful Shutdown
@@ -115,9 +115,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 All endpoints return newline-separated lists of IPv4 and IPv6 subnets, perfect for firewall allowlists.
 
 ### GitHub
+See https://api.github.com/meta for services
 - `GET /github` - Returns all GitHub IP subnets combined (filtered and validated)
-- `GET /github/:subpath` - Returns IP subnets for a specific GitHub service (e.g., `hooks`, `web`, `api`, `git`)
+- `GET /github/:service` - Returns IP subnets for a specific GitHub service (e.g., `hooks`, `web`, `api`, `git`)
 
 ### AWS
+See https://ip-ranges.amazonaws.com/ip-ranges.json for services
 - `GET /aws` - Returns all AWS IP subnets from all services
 - `GET /aws/:service` - Returns IP subnets for a specific AWS service (e.g., `EC2`, `AMAZON`, `S3`) - case insensitive
