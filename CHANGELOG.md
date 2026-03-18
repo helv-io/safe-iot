@@ -1,3 +1,19 @@
+
+
+# 1.1.0 (2026-03-18)
+
+
+### Bug Fixes
+
+* sync package-lock.json and update CI for Node.js 24 ([307b954](https://github.com/helv-io/safe-iot/commit/307b95409e165f16dbfbe2ea41ad936bf5c4d620))
+
+
+### Features
+
+* add AWS IP ranges support ([0e7334f](https://github.com/helv-io/safe-iot/commit/0e7334f8ecf86b7b303a099daf6202353c2cd772))
+* add graceful shutdown and disable auto GitHub publishing ([1a5ff2a](https://github.com/helv-io/safe-iot/commit/1a5ff2ac91bc8e7d84c532d4eb9cfd55da9e6af8))
+* re-enable automated GitHub publishing ([3ca2fe9](https://github.com/helv-io/safe-iot/commit/3ca2fe9bb46914a49d11308d45577d955f007800))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
