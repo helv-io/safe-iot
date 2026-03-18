@@ -110,6 +110,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 All endpoints return newline-separated lists of IPv4 and IPv6 subnets, perfect for firewall allowlists.
 
-- `GET /` - Returns IP subnets from paths specified in the `LISTS` environment variable (comma-separated paths like `/github/api,/github/web`)
+### GitHub
 - `GET /github` - Returns all GitHub IP subnets combined (filtered and validated)
 - `GET /github/:subpath` - Returns IP subnets for a specific GitHub service (e.g., `hooks`, `web`, `api`, `git`)
+
+### AWS
+- `GET /aws` - Returns all AWS IP subnets from all services
+- `GET /aws/:service` - Returns IP subnets for a specific AWS service (e.g., `EC2`, `AMAZON`, `S3`) - case insensitive
