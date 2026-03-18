@@ -10,12 +10,11 @@
   "github": {
     "release": true,
     "releaseName": "v${version}",
-    "releaseNotes": "changelog"
+    "releaseNotes": null
   },
   "plugins": {
     "@release-it/conventional-changelog": {
-      "preset": "angular",
-      "infile": "CHANGELOG.md"
+      "preset": "angular"
     }
   }
 }
