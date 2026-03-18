@@ -51,6 +51,10 @@ Or with environment variables:
 docker run -p 3000:3000 -e LISTS="/github/api,/github/web" safe-iot
 ```
 
+### Graceful Shutdown
+
+The application supports proper SIGTERM and SIGINT signal handling for graceful shutdowns, making it suitable for container orchestration platforms like Kubernetes.
+
 ### Firewall Integration
 
 Use the API endpoints to generate allowlists for your firewall:
@@ -93,8 +97,9 @@ npx release-it major
 The release process will:
 - Update `package.json` version
 - Create a git tag (`v1.2.3`)
-- Generate a GitHub release with changelog
-- Trigger Docker image build with proper tags
+- Update CHANGELOG.md
+
+**Note**: GitHub releases must be created manually after running release-it.
 
 ### Docker Image Tags
 
