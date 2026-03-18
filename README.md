@@ -97,9 +97,8 @@ npx release-it major
 The release process will:
 - Update `package.json` version
 - Create a git tag (`v1.2.3`)
-- Update CHANGELOG.md
-
-**Note**: GitHub releases must be created manually after running release-it.
+- Generate a GitHub release with changelog
+- Trigger Docker image build with proper tags
 
 ### Docker Image Tags
 
