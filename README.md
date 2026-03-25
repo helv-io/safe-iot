@@ -1,11 +1,11 @@
 # Safe IoT
 
-A TypeScript REST API for creating customized allowlists of IP subnets, perfect for firewall configurations in pfSense, OPNsense, and other security appliances. Currently supports GitHub's IP ranges for secure IoT deployments.
+A TypeScript REST API for generating customized allowlists of IP subnets, perfect for firewall configurations in pfSense, OPNsense, and other security appliances. Supports GitHub, AWS, and Azure IP ranges.
 
 ## Features
 
 - **Custom Allow Lists**: Generate IP subnet allowlists for firewall rules
-- **GitHub Integration**: Retrieve and filter GitHub's official IP ranges
+- **Multi-Provider**: Retrieve and filter IP ranges from GitHub, AWS, and Azure
 - **Firewall Ready**: Output format compatible with pfSense, OPNsense, and similar firewalls
 - **Docker Support**: Containerized deployment with multi-platform builds
 - **Comprehensive Testing**: Unit and integration tests with live API validation
@@ -24,7 +24,7 @@ A TypeScript REST API for creating customized allowlists of IP subnets, perfect 
    npm test
    ```
 
-   To run integration tests with live GitHub API:
+   To run integration tests with live APIs:
    ```bash
    RUN_INTEGRATION_TESTS=true npm test
    ```
@@ -48,7 +48,7 @@ docker run -p 3000:3000 --env-file .env safe-iot
 
 Or with environment variables:
 ```bash
-docker run -p 3000:3000 -e HOSTS="/github/api,/github/web" safe-iot
+docker run -p 3000:3000 -e HOSTS="/github/api,/azure/AzureCloud" safe-iot
 ```
 
 ### Graceful Shutdown
@@ -60,12 +60,17 @@ The application supports proper SIGTERM and SIGINT signal handling for graceful 
 Use the API endpoints to generate allowlists for your firewall:
 
 ```bash
-# Get all GitHub IPs for firewall allowlist
+# Get all GitHub IPs
 curl http://localhost:3000/github
 
-# Get specific subnet groups
-curl http://localhost:3000/github/api
-curl http://localhost:3000/github/web
+# Get all Azure IPs
+curl http://localhost:3000/azure
+
+# Get specific Azure service tag
+curl http://localhost:3000/azure/AzureKeyVault
+
+# Get specific AWS service
+curl http://localhost:3000/aws/EC2
 ```
 
 Copy the returned IP subnets directly into your pfSense/OPNsense firewall rules.
@@ -112,14 +117,40 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## API Endpoints
 
-All endpoints return newline-separated lists of IPv4 and IPv6 subnets, perfect for firewall allowlists.
+All endpoints return newline-separated lists of IPv4 and IPv6 subnets, ready for firewall allowlists. An invalid or unknown service name returns an empty response (HTTP 200) rather than an error.
+
+### Root
+
+- `GET /` — Fetches and merges all paths listed in the `HOSTS` environment variable (comma-separated), returning a deduplicated newline-separated list of subnets.
+
+  Example `.env`:
+  ```
+  HOSTS=/github/hooks,/aws/EC2,/azure/AzureCloud
+  ```
 
 ### GitHub
-See https://api.github.com/meta for services
-- `GET /github` - Returns all GitHub IP subnets combined (filtered and validated)
-- `GET /github/:service` - Returns IP subnets for a specific GitHub service (e.g., `hooks`, `web`, `api`, `git`)
+
+See https://api.github.com/meta for available services.
+
+| Endpoint | Description |
+|---|---|
+| `GET /github` | All GitHub IP subnets combined (validated) |
+| `GET /github/:service` | IPs for a specific service (e.g. `hooks`, `web`, `api`, `git`) |
 
 ### AWS
-See https://ip-ranges.amazonaws.com/ip-ranges.json for services
-- `GET /aws` - Returns all AWS IP subnets from all services
-- `GET /aws/:service` - Returns IP subnets for a specific AWS service (e.g., `EC2`, `AMAZON`, `S3`) - case insensitive
+
+See https://ip-ranges.amazonaws.com/ip-ranges.json for available services.
+
+| Endpoint | Description |
+|---|---|
+| `GET /aws` | All AWS IP subnets across all services |
+| `GET /aws/:service` | IPs for a specific service (e.g. `EC2`, `AMAZON`, `S3`) — case-insensitive |
+
+### Azure
+
+See https://azservicetags.azurewebsites.net/servicetag for available service tags.
+
+| Endpoint | Description |
+|---|---|
+| `GET /azure` | All Azure IP subnets for the `AzureCloud` aggregate tag |
+| `GET /azure/:serviceTag` | IPs for a specific Azure service tag (e.g. `AzureKeyVault`, `Storage`, `AzureDevOps`) |

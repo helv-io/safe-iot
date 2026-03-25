@@ -2,12 +2,14 @@ import 'dotenv/config'
 import express from 'express'
 import githubRouter from './hosts/github'
 import awsRouter from './hosts/aws'
+import azureRouter from './hosts/azure'
 
 const app = express()
 const port = process.env.PORT || 3000
 
 app.use('/github', githubRouter)
 app.use('/aws', awsRouter)
+app.use('/azure', azureRouter)
 
 // Route for / - returns URL lists specified in HOSTS env var
 app.get('/', async (_req, res) => {
