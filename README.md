@@ -1,11 +1,11 @@
 # Safe IoT
 
-A TypeScript REST API for generating customized allowlists of IP subnets, perfect for firewall configurations in pfSense, OPNsense, and other security appliances. Supports GitHub, AWS, and Azure IP ranges.
+A TypeScript REST API for generating customized allowlists of IP subnets, perfect for firewall configurations in pfSense, OPNsense, and other security appliances. Supports GitHub, AWS, Azure, and Google Cloud IP ranges.
 
 ## Features
 
 - **Custom Allow Lists**: Generate IP subnet allowlists for firewall rules
-- **Multi-Provider**: Retrieve and filter IP ranges from GitHub, AWS, and Azure
+- **Multi-Provider**: Retrieve and filter IP ranges from GitHub, AWS, Azure, and Google Cloud
 - **Firewall Ready**: Output format compatible with pfSense, OPNsense, and similar firewalls
 - **Docker Support**: Containerized deployment with multi-platform builds
 - **Comprehensive Testing**: Unit and integration tests with live API validation
@@ -48,7 +48,7 @@ docker run -p 3000:3000 --env-file .env safe-iot
 
 Or with environment variables:
 ```bash
-docker run -p 3000:3000 -e HOSTS="/github/api,/azure/AzureCloud" safe-iot
+docker run -p 3000:3000 -e HOSTS="/github/api,/azure/AzureCloud,/google/us-central1" safe-iot
 ```
 
 ### Graceful Shutdown
@@ -71,6 +71,12 @@ curl http://localhost:3000/azure/AzureKeyVault
 
 # Get specific AWS service
 curl http://localhost:3000/aws/EC2
+
+# Get all Google Cloud IPs
+curl http://localhost:3000/google
+
+# Get specific Google Cloud region
+curl http://localhost:3000/google/us-central1
 ```
 
 Copy the returned IP subnets directly into your pfSense/OPNsense firewall rules.
@@ -125,7 +131,7 @@ All endpoints return newline-separated lists of IPv4 and IPv6 subnets, ready for
 
   Example `.env`:
   ```
-  HOSTS=/github/hooks,/aws/EC2,/azure/AzureCloud
+  HOSTS=/github/hooks,/aws/EC2,/azure/AzureCloud,/google/us-central1
   ```
 
 ### GitHub
@@ -154,3 +160,12 @@ See https://azservicetags.azurewebsites.net/servicetag for available service tag
 |---|---|
 | `GET /azure` | All Azure IP subnets for the `AzureCloud` aggregate tag |
 | `GET /azure/:serviceTag` | IPs for a specific Azure service tag (e.g. `AzureKeyVault`, `Storage`, `AzureDevOps`) |
+
+### Google Cloud
+
+See https://www.gstatic.com/ipranges/cloud.json for available regions.
+
+| Endpoint | Description |
+|---|---|
+| `GET /google` | All Google Cloud IP subnets across all regions |
+| `GET /google/:scope` | IPs for a specific Google Cloud region (e.g. `us-central1`, `europe-west1`, `asia-southeast1`) — case-insensitive |
